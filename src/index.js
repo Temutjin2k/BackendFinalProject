@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const verifyToken = require('./middlewares/authMiddleware');
 const qrCodeApi = require('./QR-code/qr-code');
 const authRoutes = require('./auth/auth_handler'); 
+const BmiHandler = require('./bmi/bmi')
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -35,6 +37,11 @@ app.get('/api/profile/info', verifyToken, authRoutes.ProfileHandler);
 // QR-code
 app.get('/api/qrcode', qrCodeApi); 
 
+// BMI 
+app.get('/api/bmi', BmiHandler)
+
+
+// Bmi
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
 });
