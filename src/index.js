@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const verifyToken = require('./middlewares/authMiddleware'); // Middleware
+const qrCodeApi = require('./QR-code/qr-code')
 
 const app = express();
 const JWT_SECRET = process.env.SECRET;
@@ -38,6 +39,10 @@ app.get("/login", (req, resp) =>{
 app.get("/profile", (req, resp) =>{
     resp.sendFile(path.join(__dirname, "../",'web', 'profile.html'));
 })
+app.get("/qr-code", (req, res) =>{
+    res.sendFile(path.join(__dirname, "../",'web', 'qr-code.html'));
+})
+
 
 // Register Endpoint
 app.post("/api/register", async (req, resp) => {
@@ -124,6 +129,9 @@ app.get('/api/profile/info', verifyToken, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+app.get('/api/qrcode', qrCodeApi); 
+
 
 app.listen(8080, () => {
     console.log("Server running at http://localhost:8080/");
