@@ -30,6 +30,7 @@ const User = mongoose.model("User", userSchema, "users");
 app.use(express.static('web'))
 app.use(express.json());
 
+// Html pages
 app.get("/sign-up", (req, resp) =>{
     resp.sendFile(path.join(__dirname, "../",'web', 'sign-up.html'));
 })
@@ -42,6 +43,19 @@ app.get("/profile", (req, resp) =>{
 app.get("/qr-code", (req, res) =>{
     res.sendFile(path.join(__dirname, "../",'web', 'qr-code.html'));
 })
+app.get("/mailing", (req, res) =>{
+    res.sendFile(path.join(__dirname, "../",'web', 'nodemailer.html'));
+})
+app.get("/bmi", (req, res) =>{
+    res.sendFile(path.join(__dirname, "../",'web', 'bmi.html'));
+})
+app.get("/weather", (req, res) =>{
+    res.sendFile(path.join(__dirname, "../",'web', 'weather.html'));
+})
+app.get("/admin", (req, res) =>{
+    res.sendFile(path.join(__dirname, "../",'web', 'admin.html'));
+})
+
 
 
 // Register Endpoint
