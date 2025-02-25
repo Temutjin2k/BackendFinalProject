@@ -11,6 +11,7 @@ const BmiHandler = require('./bmi/bmi')
 const MailHandler = require('./nodemailer/mailer');
 const WeatherHandler = require('./Weather/weather_handler');
 
+const BlogRoutes = require('./posts/post_handler')
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -37,7 +38,7 @@ pages.forEach(page => {
     });
 });
 
-const authpages = ['profile', 'qr-code', 'mailing', 'bmi', 'weather'];
+const authpages = ['profile', 'qr-code', 'mailing', 'bmi', 'weather', 'blogs'];
 authpages.forEach(page => {
     app.get(`/${page}`, middlewares.verifyToken, (req, res) => {
         res.sendFile(path.join(__dirname, '../', 'web', `${page}.html`));
@@ -67,6 +68,15 @@ app.get('/api/bmi', middlewares.verifyToken, BmiHandler)
 // Weather
 // https://www.weatherapi.com/
 app.get('/api/weather', middlewares.verifyToken, WeatherHandler);
+
+
+// Crud for blogs
+app.post("/api/blogs", BlogRoutes.PostBlog)
+app.get("/api/blogs", BlogRoutes.GetBlogs)
+app.get("/api/blogs/:id", BlogRoutes.GetBlogById)
+app.put("/api/blogs/:id", BlogRoutes.UpdateBlog)
+app.delete("/api/blogs/:id", BlogRoutes.DeleteBlog)
+
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
