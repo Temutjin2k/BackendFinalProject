@@ -46,7 +46,8 @@ document.querySelector('form').addEventListener('submit', async (e) => {
         // Handle response
         if (response.ok) {
             const result = await response.json();
-            console.log(result.message)
+            
+            alert(result.message)
             window.location.href = '/login';
         } else {
             const error = await response.json();

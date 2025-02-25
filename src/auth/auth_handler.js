@@ -21,14 +21,15 @@ async function RegisterHandler(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
-            first_name,
-            last_name,
-            email,
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            role: "user",
             password: hashedPassword
         });
 
         await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'Success' });
 
     } catch (err) {
         console.error('Error registering user', err);
@@ -36,7 +37,7 @@ async function RegisterHandler(req, res) {
     }
 }
 
-async function LoginHandler(req, res){
+async function LoginHandler(req, res) {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -50,19 +51,24 @@ async function LoginHandler(req, res){
             return res.status(401).json({ error: 'Email does not exist' });
         }
 
-        // Compare password
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ error: 'Wrong password' });
         }
 
         const token = jwt.sign(
-            { email: user.email },
+            { email: user.email, role: user.role },
             JWT_SECRET,
             { expiresIn: '1h' }
         );
 
-        res.status(200).json({ message: 'Login successful', token });
+        // Set token in HTTP-only cookie
+        res.cookie('token', token, {
+            httpOnly: true,   // Secure against XSS attacks
+            maxAge: 3600000   // 1 hour
+        });
+
+        res.status(200).json({ message: 'Login successful' });
 
     } catch (error) {
         console.error('Error during login', error);
@@ -70,9 +76,15 @@ async function LoginHandler(req, res){
     }
 }
 
+function LogOut(req, res) {
+    res.clearCookie("token"); 
+    res.status(200).json({ message: "Logged out successfully" });
+}
+
+
 async function ProfileHandler (req, res) {
     try {
-        const userEmail = req.email;
+        const userEmail = req.user.email;
         const user = await User.findOne({ email: userEmail }, 'first_name last_name email');
 
         if (!user) {
@@ -86,4 +98,4 @@ async function ProfileHandler (req, res) {
     }
 }
 
-module.exports = { RegisterHandler, LoginHandler, ProfileHandler };
+module.exports = { RegisterHandler, LoginHandler, ProfileHandler, LogOut };

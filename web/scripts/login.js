@@ -16,13 +16,11 @@ document.querySelector('form').addEventListener('submit', async (e) => {
         });
 
         // Handle response
+        const result = await response.json();
         if (response.ok) {
-            const result = await response.json();
-            localStorage.setItem('token', result.token);
-            window.location.href = '/profile';
+            window.location.href = '/';
         } else {
-            const error = await response.json();
-            alert(`Login failed: ${error.message || 'Unknown error'}`);
+            alert(`Login failed: ${result.error || 'Unknown error'}`);
         }
     } catch (error) {
         console.error('Error during login:', error);

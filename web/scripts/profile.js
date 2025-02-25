@@ -1,18 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-        alert('Unauthorized');
-        window.location.href = '/login';
-        return;
-    }
-
     try {
         const response = await fetch('/api/profile/info', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
+            method: 'GET'
         });
 
         if (response.ok) {
@@ -24,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             const error = await response.json();
             alert(`Ошибка: ${error.error}`);
-            localStorage.removeItem('token');
             window.location.href = '/login';
         }
     } catch (error) {
