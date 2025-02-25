@@ -6,12 +6,15 @@ const verifyToken = require('./middlewares/authMiddleware');
 const qrCodeApi = require('./QR-code/qr-code');
 const authRoutes = require('./auth/auth_handler'); 
 const BmiHandler = require('./bmi/bmi')
-const MailHandler = require('./nodemailer/mailer')
+const MailHandler = require('./nodemailer/mailer');
+const WeatherHandler = require('./Weather/weather_handler');
 
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 const MongoURL = process.env.MongoURL;
+
+
 
 mongoose.connect(MongoURL)
     .then(() => console.log("Connected to MongoDB"))
@@ -44,9 +47,10 @@ app.post('/api/mail', MailHandler)
 // BMI 
 app.get('/api/bmi', BmiHandler)
 
+// Weather
+// https://www.weatherapi.com/
+app.get('/api/weather', WeatherHandler);
 
-
-// Bmi
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
 });
