@@ -57,12 +57,12 @@ async function LoginHandler(req, res) {
         }
 
         const token = jwt.sign(
-            { email: user.email, role: user.role },
+            { email: user.email, role: user.role, fullName: `${user.first_name} ${user.last_name}`},
             JWT_SECRET,
             { expiresIn: '1h' }
         );
 
-        // Set token in HTTP-only cookie
+        // Печеньки
         res.cookie('token', token, {
             httpOnly: true,   // Secure against XSS attacks
             maxAge: 3600000   // 1 hour

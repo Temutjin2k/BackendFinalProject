@@ -51,37 +51,40 @@ async function GetBlogById(req, res) {
 }
 
 async function UpdateBlog(req, res){
-    const id = req.params.id;
-    const blog = await Blog.findById(id);
-    if (!blog) res.status(400).json({ error: "Blog does not exist"})
-    
-    const {title, body, author} = req.body;
+    try {
+        const { title, body } = req.body;
+        const blog = await Blog.findById(req.params.id);
 
-    if (!title){
-        return res.status(400).json({error: "title is not provided"});
-    }else if (!body){
-        return res.status(400).json({error: "body is not provided"});
-    }else if (!author){
-        return res.status(400).json({error: "author is not provided"});
+        if (!blog) {
+            return res.status(404).json({ error: 'Blog not found' });
+        }
+
+        blog.title = title;
+        blog.body = body;
+        await blog.save();
+
+        res.status(200).json({ message: 'Blog updated successfully' });
+    } catch (error) {
+        console.error('Error updating blog:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
-
-
-    if (blog.title == title && blog.body == body && blog.author == author){
-        return res.status(400).json({ error: "No changes were made" })
-    }
-
-    await Blog.updateOne({_id: id}, {$set: {title, body, author}})
-    
-    res.json({message: "Blog updated successfully"})
 }
 
 async function DeleteBlog(req, res){
-    const id = req.params.id
-    const blog = Blog.findById(id)
-    if (!blog) return res.status(400).json({error: "blog does not exist"})
-    
-    await Blog.deleteOne({_id: id})
-    res.json({message: "blog deleted successfully"})
+    try {
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({ error: 'Blog not found' });
+        }
+
+
+        await Blog.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Blog deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting blog:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
 
 module.exports = {PostBlog, GetBlogs, GetBlogById, UpdateBlog, DeleteBlog}

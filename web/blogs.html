@@ -10,29 +10,38 @@
 
 <body>
     <div class="container">
-        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4
-                                border-bottom">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
                 <li><a href="/qr-code" class="nav-link px-2 link-secondary">QR Code</a></li>
                 <li><a href="/mailing" class="nav-link px-2 link-secondary">Nodemailer</a></li>
                 <li><a href="/bmi" class="nav-link px-2 link-secondary">BMI</a></li>
                 <li><a href="/weather" class="nav-link px-2 link-secondary">Weather</a></li>
-                <li><a href="/weather" class="nav-link px-2">Blogs</a></li>
+                <li><a href="/blogs" class="nav-link px-2">Blogs</a></li>
                 <li><a href="/admin" class="nav-link px-2 link-secondary">Admin</a></li>
             </ul>
+
+            <div class="col-md-3 text-end" id="auth-buttons">
+                <button type="button" class="btn btn-outline-primary me-2"
+                    onclick="window.location.href='/profile';">Profile</button>
+                <button type="button" class="btn btn-danger" onclick="logout();">Logout</button>
+            </div>
         </header>
 
-        <h1 class="text-center mb-4">Blogs</h1>
         <div class="card p-4 mb-4">
             <h3>Create New Blog</h3>
+            <!-- Убрали ввод авторства — оно теперь будет проставляться автоматически -->
             <input type="text" id="title" class="form-control mb-2" placeholder="Title">
             <textarea id="body" class="form-control mb-2" placeholder="Body"></textarea>
-            <input type="text" id="author" class="form-control mb-2" placeholder="Author">
             <button class="btn btn-primary" onclick="createBlog()">Create Blog</button>
         </div>
+
+        <h1 class="text-center mb-4">Blogs</h1>
         <div id="blogList" class="row"></div>
     </div>
+
+    <!-- Модальное окно для редактирования (убираем поле author или делаем read-only) -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -44,7 +53,8 @@
                     <input type="hidden" id="editId" required>
                     <input type="text" id="editTitle" class="form-control mb-2" placeholder="Title" required>
                     <textarea id="editBody" class="form-control mb-2" placeholder="Body"></textarea>
-                    <input type="text" id="editAuthor" class="form-control mb-2" placeholder="Author" required>
+                    <!-- Read-only author (или вообще убрать) -->
+                    <input type="text" id="editAuthor" class="form-control mb-2" placeholder="Author" readonly>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -54,77 +64,8 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", fetchBlogs);
-
-        async function fetchBlogs() {
-            const res = await fetch('/api/blogs');
-            const blogs = await res.json();
-            document.getElementById('blogList').innerHTML = blogs.map(blog => `
-            <div class="col-md-4">
-                <div class="card mb-3 p-3">
-                    <h5>${blog.title}</h5>
-                    <p>${blog.body}</p>
-                    <small>By: ${blog.author}</small>
-                    <button class="btn btn-warning btn-sm mt-2" onclick="openEditModal(
-                        '${blog._id}', 
-                        \`${blog.title.replace(/`/g, '\\`')}\`, 
-                        \`${blog.body.replace(/`/g, '\\`')}\`, 
-                        \`${blog.author.replace(/`/g, '\\`')}\`
-                    )">Edit</button>
-                    <button class="btn btn-danger btn-sm mt-2" onclick="deleteBlog('${blog._id}')">Delete</button>
-                </div>
-            </div>`).join('');
-        }
-
-
-        async function createBlog() {
-            const title = document.getElementById('title').value;
-            const body = document.getElementById('body').value;
-            const author = document.getElementById('author').value;
-
-            await fetch('/api/blogs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, body, author })
-            });
-            fetchBlogs();
-        }
-
-        async function deleteBlog(id) {
-            await fetch(`/api/blogs/${id}`, { method: 'DELETE' });
-            fetchBlogs();
-        }
-
-        function openEditModal(id, title, body, author) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editTitle').value = title;
-            document.getElementById('editBody').value = body;
-            document.getElementById('editAuthor').value = author;
-
-            let modalElement = document.getElementById('editModal');
-            let modal = new bootstrap.Modal(modalElement);
-            modal.show();
-        }
-
-        async function saveChanges() {
-            const id = document.getElementById('editId').value;
-            const title = document.getElementById('editTitle').value;
-            const body = document.getElementById('editBody').value;
-            const author = document.getElementById('editAuthor').value;
-
-            await fetch(`/api/blogs/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, body, author })
-            });
-
-            fetchBlogs();
-            let modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-            modal.hide();
-        }
-    </script>
-
+    <script src="scripts/blogs.js"></script>
+    <script src="scripts/logout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
