@@ -58,7 +58,39 @@ This project implements a **backend system** using **Node.js**, **Express**, and
 - **Users can generate QR codes** from any input URL.  
 
 ---
+# Screenshots
+## **Home Page** 🏠
+![image](https://github.com/user-attachments/assets/377de12b-052b-4b7a-9cd4-74ea5cc0e94f)
 
+## **Login** 👤
+![image](https://github.com/user-attachments/assets/25f379dd-5f4c-4fcd-9f42-cc1af124ffea)
+
+## **Sign Up** 👤
+![image](https://github.com/user-attachments/assets/58babc7d-68e6-48a6-a071-f58edfe2dcc0)
+
+## **Profile** 👤
+![image](https://github.com/user-attachments/assets/3cf51c5f-d979-4151-aba3-b0d60d0c9cbe)
+
+## **QR-code generator**
+![image](https://github.com/user-attachments/assets/77009c90-713c-4c57-b519-abef6d393c28)
+
+## **Sending email**
+![image](https://github.com/user-attachments/assets/80088512-608c-44be-b897-5f17f26eea4c)
+
+## **BMI calculator**
+![image](https://github.com/user-attachments/assets/e5d678a4-d70a-49bc-8a86-aa8c28a946f3)
+
+## **Weather API integration**
+![image](https://github.com/user-attachments/assets/55ff5d1d-b68a-46ce-9b81-9799a9722fdf)
+
+## **Blogs**
+### User can delete or edit only his own posts. Admin can edit or delete everyone's posts. Everyone can see everyone's posts.
+![image](https://github.com/user-attachments/assets/8e7f250c-8c03-4895-bfac-6aa0af675619)
+
+## **Admin panel**
+![image](https://github.com/user-attachments/assets/5a575557-8547-4444-a8b3-c306b6ae2fe4)
+
+---
 ## 🛠️ Setup & Installation
 ### 📌 Prerequisites
 - **Node.js**
