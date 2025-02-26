@@ -11,7 +11,9 @@ const BmiHandler = require('./bmi/bmi')
 const MailHandler = require('./nodemailer/mailer');
 const WeatherHandler = require('./Weather/weather_handler');
 
+
 const BlogRoutes = require('./posts/post_handler')
+const UserRoutes = require('./users/user_handler')
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -77,6 +79,12 @@ app.get("/api/blogs/:id", BlogRoutes.GetBlogById)
 app.put("/api/blogs/:id", BlogRoutes.UpdateBlog)
 app.delete("/api/blogs/:id", BlogRoutes.DeleteBlog)
 
+
+// Crud for users
+app.get('/api/users', middlewares.verifyToken, middlewares.verifyRole("admin"), UserRoutes.getUsers);
+app.get('/api/users/:id', middlewares.verifyToken, UserRoutes.getUserById);
+app.put('/api/users/:id', middlewares.verifyToken, UserRoutes.updateUser);
+app.delete('/api/users/:id', middlewares.verifyToken, middlewares.verifyRole("admin"), UserRoutes.deleteUser);
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
